@@ -17,8 +17,6 @@ import { Eye, EyeOff } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Label } from "@/components/ui/label"
 
-
-
 function Signup() {
 
     const {isLoaded, signUp, setActive} = useSignUp()
