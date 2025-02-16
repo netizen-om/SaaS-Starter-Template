@@ -74,6 +74,14 @@ export async function POST(req : NextRequest) {
         return NextResponse.json({error : "Free users can onlu create 3 todos please subscribe to use all service"}, { status : 403 })
     }
 
-    await req.json()
+    const { title } = await req.json()
+    const createdTodo = await prisma.todo.create({
+        data : {
+            title,
+            userId
+        }
+    })
+
+    return NextResponse.json({ message: "Todo created" }, { status: 200 })
 
 }
