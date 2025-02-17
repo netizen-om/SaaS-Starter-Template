@@ -10,7 +10,7 @@ export async function POST(req : NextRequest) {
         return NextResponse.json({error : "Unauthorized"}, { status : 401 })
     }
     
-    //capture payment
+    //capture payment or subscription
     
     try {
         const user = await prisma.user.findUnique({where : {id: userId}})
