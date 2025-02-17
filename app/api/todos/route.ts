@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const ITEMS_PER_PAGE = 10;
 
+
 export async function GET(req : NextRequest) {
     const { userId } = await auth()
 
