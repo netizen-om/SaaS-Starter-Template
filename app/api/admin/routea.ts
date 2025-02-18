@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
+import { clerkClient } from "@clerk/clerk-sdk-node";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -10,7 +11,7 @@ async function isAdmin(userId: string) {
 }
 
 export async function GET(req: NextRequest) {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId || !(await isAdmin(userId))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -50,7 +51,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId || !(await isAdmin(userId))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -92,7 +93,7 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId || !(await isAdmin(userId))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -108,6 +109,7 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
+    
     await prisma.todo.delete({
       where: { id: todoId },
     });
