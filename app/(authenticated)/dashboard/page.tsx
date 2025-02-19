@@ -51,7 +51,57 @@ async function Dashboard() {
     }
 
     const handleAddTodo = async(title:string) => {
-        
+        try {
+            const response = await fetch("/api/todos", {
+                method : "POST",
+                headers : { "Content-Type" : "application/json" },
+                body : JSON.stringify({ title }) 
+            } )
+    
+            if(!response.ok) {
+                throw new Error("An error occurred while adding todo")
+            }
+    
+            await fetchTodos(currentPage)
+        } catch (error) {
+            throw new Error("An error occurred while adding todo")
+        }
+    }
+
+    const handleUpadteTodo = async(id:string, completed:boolean) => {
+        try {
+            const response = await fetch(`/api/todos/${id}`, {
+                method :  "PUT",
+                headers : { "Content-Type" : "application/json" },
+                body : JSON.stringify( { completed } )
+            })
+
+            if(!response.ok) {
+                throw new Error("An error occurred while updating todo")
+            }
+
+            await fetchTodos(currentPage)
+
+        } catch (error) {
+            throw new Error("An error occurred while updating todo")
+        }
+    }
+
+    const handeldeleteTodo = async(id:string) => {
+        try {
+            const response = await fetch(`/api/todos/${id}`, {
+                method : "DELETE"
+            })
+
+            if(!response.ok) {
+                throw new Error("An error occurred while deleting todo")
+            }
+            
+            await fetchTodos(currentPage)
+            
+        } catch (error) {
+            throw new Error("An error occurred while deleting todo")
+        }
     }
 
     useEffect(() => {
