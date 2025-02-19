@@ -82,6 +82,6 @@ export async function POST(req : NextRequest) {
         }
     })
 
-    return NextResponse.json({ message: "Todo created" }, { status: 200 })
+    return NextResponse.json({ message: "Todo created", createdTodo }, { status: 200 })
 
 }

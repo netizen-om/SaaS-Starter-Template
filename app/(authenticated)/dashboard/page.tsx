@@ -14,6 +14,7 @@ async function Dashboard() {
     const [totalPages, setTotalPages] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
     const [totalItems, setTotalItems] = useState(0)
+    const [isSubscribed, setIsSubscribed] = useState(false)
 
     const [debounceSearchTerm] = useDebounceValue(searchTerm,300)
 
@@ -40,11 +41,25 @@ async function Dashboard() {
         }
     }, [debounceSearchTerm])
 
+    const fetchSubscriptionStatus = async() => {
+        const response = await fetch("/api/subscription")
+        if(!response.ok) {
+            throw new Error("An error occurred while fetching subscription data")
+        }
+        const data = await response.json()
+        setIsSubscribed(data.isSubscribed)
+    }
+
+    const handleAddTodo = async(title:string) => {
+        
+    }
+
     useEffect(() => {
         fetchTodos(1)
+        fetchSubscriptionStatus()
     }, [])
 
-    
+
 
   return (
     <div>Dashboard</div>
