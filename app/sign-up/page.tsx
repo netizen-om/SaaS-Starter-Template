@@ -49,7 +49,7 @@ function Signup() {
         setPendingVerification(true);
       } catch (error: any) {
         console.log(JSON.stringify(error, null, 2));
-        setError(error?.errors?.[0] ?? "An unknown error occurred on submit");
+        setError(error?.errors?.[0]?.message ?? "An unknown error occurred on submit");
       }
     }
     
@@ -64,12 +64,14 @@ function Signup() {
     
         if (completeSigUp.status !== "complete") {
           console.log(JSON.stringify(completeSigUp, null, 2));
-          setError("Email verification failed");
+          setError("An unknown error occurred on Email verification");
+
           return;
         }
     
         if (!completeSigUp.createdSessionId) {
-          setError("Session creation failed");
+          setError("An unknown error occurred while creating session");
+
           return;
         }
     
@@ -77,7 +79,8 @@ function Signup() {
         router.push("/dashboard");
       } catch (error: any) {
         console.log(JSON.stringify(error, null, 2));
-        setError(error?.errors?.[0] ?? "An unknown error occurred on verification");
+        setError(error?.errors?.[0]?.message ?? "An unknown error occurred on verification");
+
       }
     }
     

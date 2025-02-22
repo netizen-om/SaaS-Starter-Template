@@ -1,59 +1,58 @@
-"use client"
-import { SignIn, useSignIn } from '@clerk/nextjs'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { Input } from "@/components/ui/input"
-import React, { useState } from 'react'
-import { Button } from "@/components/ui/button"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
+import { useState } from "react";
+import { useSignIn } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-  } from "@/components/ui/card"
-import { Eye, EyeOff } from "lucide-react"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Label } from "@/components/ui/label"
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Eye, EyeOff } from "lucide-react";
 
+export default function SignIn() {
+  const { isLoaded, signIn, setActive } = useSignIn();
+  const [emailAddress, setEmailAddress] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
-function signIn() {
+  if (!isLoaded) {
+    return null;
+  }
 
-    const [emailAddress, setEmailAddress] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
-    const {isLoaded, signIn, setActive } = useSignIn()
-    const router = useRouter()
-
-    if(!isLoaded) {
-        return null
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!isLoaded) {
+      return;
     }
 
-    const submit = async(e : React.FormEvent) => {
-        e.preventDefault()
-        if (!isLoaded) {
-            return;
-        }
+    try {
+      const result = await signIn.create({
+        identifier: emailAddress,
+        password,
+      });
 
-        try {
-            const result = await signIn.create({
-                identifier : emailAddress, password
-            })  
-
-            if(result.status === "complete") {
-                await setActive({session : result.createdSessionId})
-                router.push("/dashboard")
-            } else {
-                console.log(JSON.stringify(result, null, 2));
-            }
-        } catch (error : any) {
-            setError(error.errors[0].message)
-            console.error("Error : " + error)
-
-        }
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId });
+        router.push("/dashboard");
+      } else {
+        console.error(JSON.stringify(result, null, 2));
+      }
+    } catch (err: any) {
+      console.error("error", err.errors[0].message);
+      setError(err.errors[0].message);
     }
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-background">
@@ -121,7 +120,5 @@ function signIn() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
-
-export default signIn
